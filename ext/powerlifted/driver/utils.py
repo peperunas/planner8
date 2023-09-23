@@ -1,5 +1,7 @@
 import os
 
+from pathlib import Path
+
 def get_elapsed_time():
     """
     Return the CPU time taken by the python process and its child
@@ -33,8 +35,12 @@ def find_domain_filename(task_filename):
 
 
 def remove_temporary_files(options):
-    running_dir = os.getcwd()
-    os.remove(options.translator_file)
-    # Harcoded files for now
-    os.remove('new-instance-file.pddl')
-    os.remove('new-domain-file.pddl')
+    files: list[Path] = list(
+        map(
+            lambda x: Path(x),
+            [options.translator_file, "new-instance-file.pddl", "new-domain-file.pddl"],
+        )
+    )
+
+    for f in files:
+        f.unlink(missing_ok=True)
